@@ -24,12 +24,12 @@ export default {
 	plugins: [
 		new WebpackUserscript({
 			headers: {
-				name: '[hack-name]',
+				name: '简道云批量打卡',
 				version: '1.0.0',
 				grant: ['unsafeWindow'],
 				include: '*://*.*'
 			},
-			downloadBaseUrl: 'https://github.com/CUC-Life-Hack/[hack-name]/raw/master/dist/main.user.js',
+			downloadBaseUrl: 'https://github.com/CUC-Life-Hack/jdy-batch-checkin/raw/master/dist/main.user.js',
 			metajs: false,
 			renameExt: true,
 			pretty: true,
