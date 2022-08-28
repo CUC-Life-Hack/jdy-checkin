@@ -1,6 +1,18 @@
-import { Hack, PostAjax, window } from '@cuclh/userscript-base';
-import { Button } from '@cuclh/userscript-base/src/layout.js';
+import { Hack, PostAjax as _PostAjax, window } from '@cuclh/userscript-base';
+import * as Layout from '@cuclh/userscript-base/src/layout.js';
 import _ from 'lodash';
+import './main.scss';
+import Form from './form.js';
+
+function PostAjax(url, method, headers = {}, payload, timeout) {
+	headers = _.assign(headers, {
+		'Content-Type': 'application/json;charset=utf-8',
+		'Accept': 'application/json, text/plain, */*',
+		'X-CSRF-Token': window.jdy_csrf_token,
+		'X-JDY-VER': window.jdy_static.jdy_ver
+	});
+	return _PostAjax(url, method, headers, payload, timeout);
+}
 
 class Record {
 	constructor(user, date, location) {
@@ -114,15 +126,15 @@ class Record {
 							},
 							// 早
 							"_widget_1597486309854": {
-								"data": "1"
+								"data": "37"
 							},
 							// 中
 							"_widget_1597486309914": {
-								"data": "1"
+								"data": "37"
 							},
 							// 晚
 							"_widget_1597486309943": {
-								"data": "1"
+								"data": "37"
 							}
 						}
 					],
@@ -164,18 +176,15 @@ class Record {
 					"data": "否",
 					"visible": true
 				},
-				// 学院抄送（辅导员 ID）
+				// 学院抄送
 				"_widget_1599385089556": {
 					"data": [
-						// "5e4008a512c3320006f8b4fd",	// 张波
-						// "594ce5dd3726b7321e0a5821"	// 刘幼春
 					],
 					"visible": false
 				},
 				// 学工抄送
 				"_widget_1599385089589": {
 					"data": [
-						// "5b8df24ee6e30a158b2a97d9"	// 夏依达·外力
 					],
 					"visible": false
 				},
@@ -197,12 +206,7 @@ class Record {
 
 	async Post() {
 		const data = this.MakeData();
-		await PostAjax('/_/data/create', 'POST', {
-			'Content-Type': 'application/json;charset=utf-8',
-			'Accept': 'application/json, text/plain, */*',
-			'X-CSRF-Token': window.jdy_csrf_token,
-			'X-JDY-VER': window.jdy_static.jdy_ver
-		}, JSON.stringify(data));
+		await PostAjax('/_/data/create', 'POST', {}, JSON.stringify(data));
 	}
 }
 
@@ -210,20 +214,9 @@ _.assign(Hack, {
 	header: '简道云批量打卡',
 
 	async Init() {
-		const app = this.app = JSON.parse(await PostAjax(
-			location.href.replace('dashboard#', '_'),
-			'POST',
-			{
-				'X-CSRF-Token': window.jdy_csrf_token,
-				'X-JDY-VER': window.jdy_static.jdy_ver
-			}
-		)).entry;
+		const app = this.app = JSON.parse(await PostAjax(location.href.replace('dashboard#', '_'), 'POST', {})).entry;
 
-		const info = JSON.parse(await PostAjax('/corp/login_user_info', 'POST', {
-			'Content-Type': 'application/json;charset=UTF-8',
-			'X-CSRF-Token': window.jdy_csrf_token,
-			'X-JDY-VER': window.jdy_static.jdy_ver
-		}, '{}'));
+		const info = JSON.parse(await PostAjax('/corp/login_user_info', 'POST', {}, '{}'));
 		const member = info.memberInfo;
 		const dept = member.dept[0];
 
@@ -234,12 +227,10 @@ _.assign(Hack, {
 			deptName: dept.name
 		};
 
-		const link = JSON.parse(await PostAjax('/_/data/link', 'POST', {
-			'Content-Type': 'application/json;charset=utf-8',
-			'Accept': 'application/json, text/plain, */*',
-			'X-CSRF-Token': window.jdy_csrf_token,
-			'X-JDY-VER': window.jdy_static.jdy_ver
-		}, JSON.stringify({
+		const items = this.items = JSON.parse(await PostAjax(`/_/app/${app.appId}/form/${app.entryId}`, 'POST')).entry.content.items;
+		this.form = await Form.FromItems(items);
+
+		const link = JSON.parse(await PostAjax('/_/data/link', 'POST', {}, JSON.stringify({
 			appId: app.appId,
 			entryId: app.entryId,
 			fields: [
@@ -269,7 +260,8 @@ _.assign(Hack, {
 (async () => {
 	await Hack.Run();
 	Hack.panel.Layout([
-		new Button('创建打卡记录', async function() {
+		new Layout.Control(Hack.form.ToDOM()),
+		new Layout.Button('创建打卡记录', async function() {
 			const record = new Record(
 				Hack.user,
 				new Date(),
@@ -286,3 +278,5 @@ _.assign(Hack, {
 		})
 	]);
 })();
+
+console.log(Hack);

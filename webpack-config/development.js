@@ -8,15 +8,15 @@ const __dirname = path.dirname(__filename);
 
 export default {
 	mode: 'development',
-	entry: path.resolve(__dirname, '../main.js'),
+	entry: path.resolve(__dirname, '../src/main.js'),
 	output: {
 		path: path.resolve(__dirname, '../dev'),
 		filename: 'main.js'
 	},
 	module: {
 		rules: [{
-			test: /\.css/,
-			use: ['style-loader', 'css-loader']
+			test: /\.(css|s[ac]ss)/,
+			use: ['style-loader', 'css-loader', 'sass-loader']
 		}]
 	},
 	plugins: [userscript, new CleanWebpackPlugin()]
