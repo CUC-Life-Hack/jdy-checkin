@@ -17,7 +17,7 @@ function PostAjax(url, method, headers = {}, payload, timeout) {
 class Hack extends HackBase.Hack {
 	constructor() {
 		super();
-		this.header = '简道云批量打卡';
+		this.header = '简道云打卡';
 		this.TryInit().then(() => {
 			this.panel.Layout([
 				new Layout.Control(this.form.ToDOM()),

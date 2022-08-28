@@ -1,5 +1,5 @@
 {
-	"name": "@cuclh/jdy-batch-checkin",
+	"name": "@cuclh/jdy-checkin",
 	"version": "1.0.0",
 	"main": "main.js",
 	"type": "module",
