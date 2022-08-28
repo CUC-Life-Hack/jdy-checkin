@@ -19,7 +19,7 @@
 		"webpack-userscript": "github:WangNianyi2001/webpack-userscript"
 	},
 	"dependencies": {
-		"@cuclh/userscript-base": "git+https://github.com/CUC-Life-Hack/userscript-base.git",
+		"@cuclh/userscript-base": "github:CUC-Life-Hack/userscript-base",
 		"lodash": "^4.17.21"
 	}
 }

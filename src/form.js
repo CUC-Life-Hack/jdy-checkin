@@ -12,6 +12,7 @@ class Field {
 		field.needFetch = false;
 		field.ready = true;
 
+		field.type = widget.type;
 		field.visible = !!widget.visible;
 		field.label = item.label;
 
@@ -27,7 +28,9 @@ class Field {
 		this.needFetch = true;
 		this.ready = false;
 
-		// 视觉属性
+		// 属性
+		this.type = null;
+		this.value = null;
 		this.visible = false;
 		this.label = null;
 	}
@@ -43,6 +46,20 @@ class Field {
 		$label.classList.add('label');
 		$label.innerText = this.label;
 		$div.append($label);
+
+		switch(this.type) {
+			case 'text': {
+				const $input = document.createElement('input');
+				$input.type = 'text';
+				$input.value = this.value;
+				$input.addEventListener('change', () => this.value = $input.value);
+				$div.append($input);
+				break;
+			}
+			default:
+				$div.append('尚未实现此类型键值控件');
+				break;
+		}
 	
 		return $div;
 	}
