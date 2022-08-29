@@ -1,6 +1,24 @@
 import _ from 'lodash';
 import './form.scss';
 
+function PadString(str, pad, len) {
+	str = str + '';
+	pad = pad + '';
+	return pad.repeat(Math.max(0, len - str.length)) + str;
+}
+
+const DateToString = date => [
+	date.getFullYear(),
+	date.getMonth() + 1,
+	date.getDate()
+].map(s => PadString(s, '0', 2)).join('-');
+
+const TimeToString = time => [
+	time.getHours(),
+	time.getMinutes(),
+	time.getSeconds()
+].map(s => PadString(s, '0', 2)).join(':');
+
 class Field {
 	static async FromItem(form, item) {
 		{
@@ -34,12 +52,19 @@ class Field {
 		},
 		datetime() {
 			const $p = document.createElement('p');
+			const now = new Date(Date.now());
 
 			const $date = document.createElement('input');
 			$date.type = 'date';
+			$date.value = DateToString(now);
 
 			const $time = document.createElement('input');
 			$time.type = 'time';
+			$time.value = TimeToString(now);
+
+			[$date, $time].forEach($ => $.addEventListener('input', () =>
+				this.value = +new Date($date.value + ' ' + $time.value)
+			));
 
 			$p.append($date, $time);
 			return $p;
@@ -52,6 +77,7 @@ class Field {
 				$radio.type = 'radio';
 				$radio.name = this.id;
 				$radio.value = option.value;
+				$radio.addEventListener('input', () => this.value = $radio.value);
 				$option.append($radio, option.text);
 				$list.append($option);
 			}
@@ -114,7 +140,6 @@ class Field {
 			}
 		}
 
-		console.log(this.widget);
 		this.Enabled = this.Enabled && this.widget.enable;
 		this.Visible = true;
 
