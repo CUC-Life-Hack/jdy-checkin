@@ -1,0 +1,26 @@
+#hack-panel {
+	form {
+		.label {
+			margin: 0;
+			font-size: 1rem;
+		}
+
+		.description * {
+			margin: 0;
+		}
+
+		input[type=radio] {
+			$size: 1rem;
+
+			width: $size;
+			height: $size;
+			border-radius: 50%;
+
+			vertical-align: middle;
+
+			&:checked {
+				background-color: orange;
+			}
+		}
+	}
+}

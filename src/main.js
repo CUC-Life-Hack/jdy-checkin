@@ -1,7 +1,6 @@
 import * as HackBase from '@cuclh/userscript-base';
 import * as Layout from '@cuclh/userscript-base/src/layout.js';
 import _ from 'lodash';
-import './main.scss';
 import Form from './form.js';
 
 function PostAjax(url, method, headers = {}, payload, timeout) {
