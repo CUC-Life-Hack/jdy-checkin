@@ -71,12 +71,27 @@ class Field {
 		},
 		usergroup() {},
 	}));
+	
+	get Enabled() {
+		return this.DOM.classList.contains('enabled');
+	}
+	set Enabled(value) {
+		this.DOM.classList[value ? 'add' : 'remove']('enabled');
+	}
+
+	get Visible() {
+		return this.DOM.classList.contains('visible');
+	}
+	set Visible(value) {
+		this.DOM.classList[value ? 'add' : 'remove']('visible');
+	}
 
 	get DOM() {
 		if(this.dom !== null)
 			return this.dom;
 
 		this.dom = document.createElement('div');
+		this.dom.classList.add('field');
 		this.dom.dataset['widgetName'] = this.id;
 		
 		const $label = document.createElement('h2');
@@ -84,10 +99,24 @@ class Field {
 		$label.innerText = this.label;
 		this.dom.append($label);
 
-		if(!Field.domBuilders.has(this.type))
+		this.Enabled = true;
+		if(!Field.domBuilders.has(this.type)) {
 			this.dom.append('尚未实现此类型键值控件');
-		else
-			this.dom.append(Field.domBuilders.get(this.type).call(this));
+			this.Enabled = false;
+		}
+		else {
+			const dom = Field.domBuilders.get(this.type).call(this);
+			if(dom)
+				this.dom.append(dom);
+			else {
+				this.dom.append('尚未实现此类型键值控件');
+				this.Enabled = false;
+			}
+		}
+
+		console.log(this.widget);
+		this.Enabled = this.Enabled && this.widget.enable;
+		this.Visible = true;
 
 		return this.dom;
 	}
@@ -104,7 +133,6 @@ class Field {
 		// 属性
 		this.type = null;
 		this.value = null;
-		this.visible = false;
 		this.label = null;
 		
 		this.dom = null;

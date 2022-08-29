@@ -1,5 +1,22 @@
 #hack-panel {
-	form {
+	form>.field {
+		position: relative;
+
+		&:not(.enabled)::after {
+			content: "";
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: #00000022;
+		}
+
+		&:not(.visible) {
+			display: none;
+		}
+
 		.label {
 			margin: 0;
 			font-size: 1rem;
