@@ -128,6 +128,16 @@ class Record {
 					],
 					"visible": true
 				},
+				// 今日是否完成核酸检测
+				"_widget_1661251622874": {
+					"data": "是",
+					"visible": true
+				},
+				// 24小时内核酸检测报告情况
+				"_widget_1661251622908": {
+					"data": "未出结果",
+					"visible": true
+				},
 				// 是否为密接或确诊
 				"_widget_1594974441946": {
 					"data": "否",
@@ -267,22 +277,36 @@ _.assign(Hack, {
 });
 
 (async () => {
-	await Hack.Run();
-	Hack.panel.Layout([
-		new Button('创建打卡记录', async function() {
-			const record = new Record(
-				Hack.user,
-				new Date(),
-				{
-					domestic: true,
-					province: '北京',
-					city: '北京市',
-					district: '东城区',
-					detail: '',
-					coordinate: [116.38, 39.9]
-				}
-			);
-			console.log(record.MakeData());
-		})
-	]);
+	await Hack.Init();
+	Hack.record = new Record(
+		Hack.user,
+		new Date(),
+		{
+			domestic: true,
+			province: '北京',
+			city: '北京市',
+			district: '东城区',
+			detail: '',
+			coordinate: [116.38, 39.9]
+		}
+	);
+	// Hack.panel.Layout([
+	// 	new Button('创建打卡记录', async function() {
+	// 		const record = new Record(
+	// 			Hack.user,
+	// 			new Date(),
+	// 			{
+	// 				domestic: true,
+	// 				province: '北京',
+	// 				city: '北京市',
+	// 				district: '东城区',
+	// 				detail: '',
+	// 				coordinate: [116.38, 39.9]
+	// 			}
+	// 		);
+	// 		console.log(record.MakeData());
+	// 	})
+	// ]);
 })();
+
+window.Hack = Hack;
